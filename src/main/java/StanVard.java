@@ -26,14 +26,22 @@ public class StanVard {
 
         Scanner scanner = new Scanner(System.in);
         String[] tasks = new String[100];
+        boolean[] completedTasks = new boolean[100];
         int taskCount = 0;
         String command = scanner.nextLine();
         while (!command.equals("bye")) {
             System.out.println(SEPARATOR);
             if (command.equals("list")) {
+                System.out.println("Here are the tasks in your list:");
                 for (int index = 0; index < taskCount; index++) {
-                    System.out.println((index + 1) + ". " + tasks[index]);
+                    String status = completedTasks[index] ? "[X]" : "[ ]";
+                    System.out.println((index + 1) + "." + status + " " + tasks[index]);
                 }
+            } else if (command.startsWith("mark ")) {
+                int taskIndex = Integer.parseInt(command.substring(5)) - 1;
+                completedTasks[taskIndex] = true;
+                System.out.println("Nice! I've marked this task as done:");
+                System.out.println("  [X] " + tasks[taskIndex]);
             } else {
                 tasks[taskCount] = command;
                 taskCount++;
