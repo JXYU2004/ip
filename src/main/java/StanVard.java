@@ -25,8 +25,7 @@ public class StanVard {
         System.out.println(SEPARATOR);
 
         Scanner scanner = new Scanner(System.in);
-        String[] tasks = new String[100];
-        boolean[] completedTasks = new boolean[100];
+        Task[] tasks = new Task[100];
         int taskCount = 0;
         String command = scanner.nextLine();
         while (!command.equals("bye")) {
@@ -34,21 +33,21 @@ public class StanVard {
             if (command.equals("list")) {
                 System.out.println("Here are the tasks in your list:");
                 for (int index = 0; index < taskCount; index++) {
-                    String status = completedTasks[index] ? "[X]" : "[ ]";
-                    System.out.println((index + 1) + "." + status + " " + tasks[index]);
+                    System.out.println((index + 1) + ".[" + tasks[index].getStatusIcon() + "] "
+                            + tasks[index].getDescription());
                 }
             } else if (command.startsWith("mark ")) {
                 int taskIndex = Integer.parseInt(command.substring(5)) - 1;
-                completedTasks[taskIndex] = true;
+                tasks[taskIndex].markAsDone();
                 System.out.println("Nice! I've marked this task as done:");
-                System.out.println("  [X] " + tasks[taskIndex]);
+                System.out.println("  [X] " + tasks[taskIndex].getDescription());
             } else if (command.startsWith("unmark ")) {
                 int taskIndex = Integer.parseInt(command.substring(7)) - 1;
-                completedTasks[taskIndex] = false;
+                tasks[taskIndex].markAsNotDone();
                 System.out.println("OK, I've marked this task as not done yet:");
-                System.out.println("  [ ] " + tasks[taskIndex]);
+                System.out.println("  [ ] " + tasks[taskIndex].getDescription());
             } else {
-                tasks[taskCount] = command;
+                tasks[taskCount] = new Task(command);
                 taskCount++;
                 System.out.println("added: " + command);
             }
