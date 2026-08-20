@@ -42,6 +42,11 @@ public class StanVard {
                 completedTasks[taskIndex] = true;
                 System.out.println("Nice! I've marked this task as done:");
                 System.out.println("  [X] " + tasks[taskIndex]);
+            } else if (command.startsWith("unmark ")) {
+                int taskIndex = Integer.parseInt(command.substring(7)) - 1;
+                completedTasks[taskIndex] = false;
+                System.out.println("OK, I've marked this task as not done yet:");
+                System.out.println("  [ ] " + tasks[taskIndex]);
             } else {
                 tasks[taskCount] = command;
                 taskCount++;

@@ -13,7 +13,7 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    1. If there are any further prompts, accept the defaults.
 1. Configure the project to use **JDK 25** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
    In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/StanVard.java` file, right-click it, and choose `Run StanVard.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see a StanVard banner and greeting. Enter text to add a task, use `list` to display tasks, use `mark <number>` to complete a task, and enter `bye` to exit.
+1. After that, locate the `src/main/java/StanVard.java` file, right-click it, and choose `Run StanVard.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see a StanVard banner and greeting. Enter text to add a task, use `list` to display tasks, use `mark <number>` or `unmark <number>` to change a task's completion status, and enter `bye` to exit.
    ```
    ____________________________________________________________
    [StanVard banner]
@@ -38,6 +38,11 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    ____________________________________________________________
    Nice! I've marked this task as done:
      [X] return book
+   ____________________________________________________________
+   unmark 2
+   ____________________________________________________________
+   OK, I've marked this task as not done yet:
+     [ ] return book
    ____________________________________________________________
    bye
    Bye. Hope to see you again soon!
