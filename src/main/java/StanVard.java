@@ -1,13 +1,13 @@
 import java.util.Scanner;
 
 /**
- * Starts StanVard, displays its greeting, and echoes commands until the user exits.
+ * Starts StanVard, displays its greeting, and manages an in-memory task list until the user exits.
  */
 public class StanVard {
     private static final String SEPARATOR = "____________________________________________________________";
 
     /**
-     * Runs the chatbot's greeting, command echo loop, and farewell sequence.
+     * Runs the chatbot's greeting, task command loop, and farewell sequence.
      *
      * @param args command-line arguments, which are not used
      */
@@ -25,10 +25,20 @@ public class StanVard {
         System.out.println(SEPARATOR);
 
         Scanner scanner = new Scanner(System.in);
+        String[] tasks = new String[100];
+        int taskCount = 0;
         String command = scanner.nextLine();
         while (!command.equals("bye")) {
             System.out.println(SEPARATOR);
-            System.out.println(command);
+            if (command.equals("list")) {
+                for (int index = 0; index < taskCount; index++) {
+                    System.out.println((index + 1) + ". " + tasks[index]);
+                }
+            } else {
+                tasks[taskCount] = command;
+                taskCount++;
+                System.out.println("added: " + command);
+            }
             System.out.println(SEPARATOR);
             command = scanner.nextLine();
         }
