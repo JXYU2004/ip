@@ -3,8 +3,8 @@
 The expected-output blocks contain program stdout only. Terminal input echo is
 shown separately by the test runner as part of the test-session record.
 
-## Valid and invalid commands preserve task state
-Aim: Verify malformed commands show clear errors without adding or changing tasks, while valid commands still work.
+## Deletion preserves remaining task state
+Aim: Verify invalid deletion leaves tasks unchanged, valid deletion removes the selected task, and remaining tasks are renumbered.
 ### Input
 ```text
 todo
@@ -14,8 +14,9 @@ deadline return book
 deadline return book /by Sunday
 event project meeting /from Mon 2pm
 event project meeting /from Mon 2pm /to 4pm
+delete 4
+delete 3
 mark two
-unmark 4
 mark 2
 unmark 1
 list
@@ -60,10 +61,15 @@ Got it. I've added this task:
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-OOPS!!! The task number must be a positive integer.
-____________________________________________________________
-____________________________________________________________
 OOPS!!! The task number is out of range.
+____________________________________________________________
+____________________________________________________________
+Noted. I've removed this task:
+  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+Now you have 2 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+OOPS!!! The task number must be a positive integer.
 ____________________________________________________________
 ____________________________________________________________
 Nice! I've marked this task as done:
@@ -77,7 +83,6 @@ ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] read book
 2.[D][X] return book (by: Sunday)
-3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
 ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________

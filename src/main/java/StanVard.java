@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -25,8 +27,7 @@ public class StanVard {
         System.out.println(SEPARATOR);
 
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[100];
-        int taskCount = 0;
+        List<Task> tasks = new ArrayList<>();
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
             if (command.equals("bye")) {
@@ -34,7 +35,7 @@ public class StanVard {
             }
             System.out.println(SEPARATOR);
             try {
-                taskCount = handleCommand(command, tasks, taskCount);
+                handleCommand(command, tasks);
             } catch (StanVardException exception) {
                 System.out.println(exception.getMessage());
             }
@@ -62,33 +63,32 @@ public class StanVard {
      *
      * @param command command entered by the user
      * @param tasks tasks currently stored by the chatbot
-     * @param taskCount number of stored tasks
-     * @return the updated number of stored tasks
      * @throws StanVardException if the command is invalid
      */
-    private static int handleCommand(String command, Task[] tasks, int taskCount) throws StanVardException {
+    private static void handleCommand(String command, List<Task> tasks) throws StanVardException {
         String trimmedCommand = command.trim();
         if (trimmedCommand.equals("list")) {
-            printTaskList(tasks, taskCount);
-            return taskCount;
+            printTaskList(tasks);
         } else if (isCommand(trimmedCommand, "mark")) {
-            int taskIndex = parseTaskIndex(trimmedCommand, "mark", taskCount);
-            tasks[taskIndex].markAsDone();
+            int taskIndex = parseTaskIndex(trimmedCommand, "mark", tasks);
+            tasks.get(taskIndex).markAsDone();
             System.out.println("Nice! I've marked this task as done:");
-            System.out.println("  " + tasks[taskIndex]);
-            return taskCount;
+            System.out.println("  " + tasks.get(taskIndex));
         } else if (isCommand(trimmedCommand, "unmark")) {
-            int taskIndex = parseTaskIndex(trimmedCommand, "unmark", taskCount);
-            tasks[taskIndex].markAsNotDone();
+            int taskIndex = parseTaskIndex(trimmedCommand, "unmark", tasks);
+            tasks.get(taskIndex).markAsNotDone();
             System.out.println("OK, I've marked this task as not done yet:");
-            System.out.println("  " + tasks[taskIndex]);
-            return taskCount;
+            System.out.println("  " + tasks.get(taskIndex));
+        } else if (isCommand(trimmedCommand, "delete")) {
+            int taskIndex = parseTaskIndex(trimmedCommand, "delete", tasks);
+            Task deletedTask = tasks.remove(taskIndex);
+            printDeletedTask(deletedTask, tasks);
         } else if (isCommand(trimmedCommand, "todo")) {
             String description = trimmedCommand.substring("todo".length()).trim();
             if (description.isEmpty()) {
                 throw new StanVardException("OOPS!!! The description of a todo cannot be empty.");
             }
-            return addTask(new Todo(description), tasks, taskCount);
+            addTask(new Todo(description), tasks);
         } else if (isCommand(trimmedCommand, "deadline")) {
             String details = trimmedCommand.substring("deadline".length()).trim();
             int byIndex = details.indexOf("/by");
@@ -103,7 +103,7 @@ public class StanVard {
             if (by.isEmpty()) {
                 throw new StanVardException("OOPS!!! The deadline time cannot be empty.");
             }
-            return addTask(new Deadline(description, by), tasks, taskCount);
+            addTask(new Deadline(description, by), tasks);
         } else if (isCommand(trimmedCommand, "event")) {
             String details = trimmedCommand.substring("event".length()).trim();
             int fromIndex = details.indexOf("/from");
@@ -123,10 +123,10 @@ public class StanVard {
             if (to.isEmpty()) {
                 throw new StanVardException("OOPS!!! The event end time cannot be empty.");
             }
-            return addTask(new Event(description, from, to), tasks, taskCount);
+            addTask(new Event(description, from, to), tasks);
+        } else {
+            throw new StanVardException("OOPS!!! I'm sorry, but I don't know what that means :-(");
         }
-
-        throw new StanVardException("OOPS!!! I'm sorry, but I don't know what that means :-(");
     }
 
     /**
@@ -145,11 +145,10 @@ public class StanVard {
      *
      * @param command trimmed command entered by the user
      * @param keyword command keyword to remove
-     * @param taskCount number of stored tasks
      * @return the zero-based task array index
      * @throws StanVardException if the task number is missing, invalid, or out of range
      */
-    private static int parseTaskIndex(String command, String keyword, int taskCount) throws StanVardException {
+    private static int parseTaskIndex(String command, String keyword, List<Task> tasks) throws StanVardException {
         String numberText = command.substring(keyword.length()).trim();
         if (numberText.isEmpty()) {
             throw new StanVardException("OOPS!!! The task number to " + keyword + " cannot be empty.");
@@ -164,7 +163,7 @@ public class StanVard {
         if (taskNumber <= 0) {
             throw new StanVardException("OOPS!!! The task number must be a positive integer.");
         }
-        if (taskNumber > taskCount) {
+        if (taskNumber > tasks.size()) {
             throw new StanVardException("OOPS!!! The task number is out of range.");
         }
         return taskNumber - 1;
@@ -174,31 +173,34 @@ public class StanVard {
      * Adds a validated task and displays its confirmation.
      *
      * @param task task to add
-     * @param tasks task storage array
-     * @param taskCount number of stored tasks before adding the task
-     * @return the updated task count
-     * @throws StanVardException if the task storage is full
+     * @param tasks task storage list
      */
-    private static int addTask(Task task, Task[] tasks, int taskCount) throws StanVardException {
-        if (taskCount == tasks.length) {
-            throw new StanVardException("OOPS!!! The task list is full.");
-        }
-        tasks[taskCount] = task;
-        int updatedTaskCount = taskCount + 1;
-        printAddedTask(task, updatedTaskCount);
-        return updatedTaskCount;
+    private static void addTask(Task task, List<Task> tasks) {
+        tasks.add(task);
+        printAddedTask(task, tasks.size());
+    }
+
+    /**
+     * Prints the confirmation shown after deleting a task.
+     *
+     * @param task deleted task
+     * @param tasks task storage list after deletion
+     */
+    private static void printDeletedTask(Task task, List<Task> tasks) {
+        System.out.println("Noted. I've removed this task:");
+        System.out.println("  " + task);
+        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
     }
 
     /**
      * Prints all tasks in their stored order.
      *
-     * @param tasks task storage array
-     * @param taskCount number of stored tasks
+     * @param tasks task storage list
      */
-    private static void printTaskList(Task[] tasks, int taskCount) {
+    private static void printTaskList(List<Task> tasks) {
         System.out.println("Here are the tasks in your list:");
-        for (int index = 0; index < taskCount; index++) {
-            System.out.println((index + 1) + "." + tasks[index]);
+        for (int index = 0; index < tasks.size(); index++) {
+            System.out.println((index + 1) + "." + tasks.get(index));
         }
     }
 }
