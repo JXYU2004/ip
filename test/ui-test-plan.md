@@ -3,17 +3,21 @@
 The expected-output blocks contain program stdout only. Terminal input echo is
 shown separately by the test runner as part of the test-session record.
 
-## Typed tasks, status changes, and string dates
-Aim: Verify all task types, unstructured date/time text, status changes, list formatting, and exit behavior.
+## Valid and invalid commands preserve task state
+Aim: Verify malformed commands show clear errors without adding or changing tasks, while valid commands still work.
 ### Input
 ```text
+todo
 todo read book
+blah
+deadline return book
 deadline return book /by Sunday
+event project meeting /from Mon 2pm
 event project meeting /from Mon 2pm /to 4pm
-deadline do homework /by no idea :-p
-mark 1
+mark two
+unmark 4
 mark 2
-unmark 2
+unmark 1
 list
 bye
 ```
@@ -29,9 +33,18 @@ Hello! I'm StanVard.
 What can I do for you?
 ____________________________________________________________
 ____________________________________________________________
+OOPS!!! The description of a todo cannot be empty.
+____________________________________________________________
+____________________________________________________________
 Got it. I've added this task:
   [T][ ] read book
 Now you have 1 tasks in the list.
+____________________________________________________________
+____________________________________________________________
+OOPS!!! I'm sorry, but I don't know what that means :-(
+____________________________________________________________
+____________________________________________________________
+OOPS!!! A deadline must include /by followed by a date/time.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
@@ -39,18 +52,18 @@ Got it. I've added this task:
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
+OOPS!!! An event must include /from and /to times.
+____________________________________________________________
+____________________________________________________________
 Got it. I've added this task:
   [E][ ] project meeting (from: Mon 2pm to: 4pm)
 Now you have 3 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
-  [D][ ] do homework (by: no idea :-p)
-Now you have 4 tasks in the list.
+OOPS!!! The task number must be a positive integer.
 ____________________________________________________________
 ____________________________________________________________
-Nice! I've marked this task as done:
-  [T][X] read book
+OOPS!!! The task number is out of range.
 ____________________________________________________________
 ____________________________________________________________
 Nice! I've marked this task as done:
@@ -58,14 +71,13 @@ Nice! I've marked this task as done:
 ____________________________________________________________
 ____________________________________________________________
 OK, I've marked this task as not done yet:
-  [D][ ] return book (by: Sunday)
+  [T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
-1.[T][X] read book
-2.[D][ ] return book (by: Sunday)
+1.[T][ ] read book
+2.[D][X] return book (by: Sunday)
 3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
-4.[D][ ] do homework (by: no idea :-p)
 ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
