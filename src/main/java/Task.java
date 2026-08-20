@@ -1,7 +1,7 @@
 /**
  * Represents a task with a description and completion status.
  */
-public class Task {
+public abstract class Task {
     private final String description;
     private boolean isDone;
 
@@ -46,4 +46,12 @@ public class Task {
     public String getDescription() {
         return description;
     }
+
+    /**
+     * Returns this task in the format shown to the user.
+     *
+     * @return the formatted task
+     */
+    @Override
+    public abstract String toString();
 }

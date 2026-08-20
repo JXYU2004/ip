@@ -13,26 +13,30 @@ Prerequisites: JDK 25, update Intellij to the most recent version.
    1. If there are any further prompts, accept the defaults.
 1. Configure the project to use **JDK 25** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
    In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/StanVard.java` file, right-click it, and choose `Run StanVard.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see a StanVard banner and greeting. Each task retains its own description and completion status. Enter text to add a task, use `list` to display tasks, use `mark <number>` or `unmark <number>` to change a task's completion status, and enter `bye` to exit.
+1. After that, locate the `src/main/java/StanVard.java` file, right-click it, and choose `Run StanVard.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see a StanVard banner and greeting. Add tasks using `todo <description>`, `deadline <description> /by <date/time>`, or `event <description> /from <start> /to <end>`. Use `list` to display tasks, `mark <number>` or `unmark <number>` to change a task's completion status, and `bye` to exit.
    ```
    ____________________________________________________________
    [StanVard banner]
    Hello! I'm StanVard.
    What can I do for you?
    ____________________________________________________________
-   read book
+   todo read book
    ____________________________________________________________
-   added: read book
+   Got it. I've added this task:
+     [T][ ] read book
+   Now you have 1 tasks in the list.
    ____________________________________________________________
-   return book
+   deadline return book /by Sunday
    ____________________________________________________________
-   added: return book
+   Got it. I've added this task:
+     [D][ ] return book (by: Sunday)
+   Now you have 2 tasks in the list.
    ____________________________________________________________
    list
    ____________________________________________________________
    Here are the tasks in your list:
-   1.[ ] read book
-   2.[ ] return book
+   1.[T][ ] read book
+   2.[D][ ] return book (by: Sunday)
    ____________________________________________________________
    mark 2
    ____________________________________________________________
