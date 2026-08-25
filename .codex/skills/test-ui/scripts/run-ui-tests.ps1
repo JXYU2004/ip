@@ -21,6 +21,9 @@ if ($javacVersion -notmatch '^javac 25(\.|$)') {
 $sourceRoot = Join-Path $projectRoot 'src\main\java'
 $classOutput = Join-Path $projectRoot 'build\ui-test-classes'
 New-Item -ItemType Directory -Path $classOutput -Force | Out-Null
+$testWorkingDirectory = Join-Path $projectRoot 'build\ui-test-working-directory'
+Remove-Item -LiteralPath $testWorkingDirectory -Recurse -Force -ErrorAction SilentlyContinue
+New-Item -ItemType Directory -Path $testWorkingDirectory -Force | Out-Null
 $sources = @(Get-ChildItem -LiteralPath $sourceRoot -Filter '*.java' -File | ForEach-Object { $_.FullName })
 & javac -d $classOutput @sources
 if ($LASTEXITCODE -ne 0) {
@@ -47,6 +50,7 @@ foreach ($testCase in $testCases) {
     $process.StartInfo.RedirectStandardInput = $true
     $process.StartInfo.RedirectStandardOutput = $true
     $process.StartInfo.RedirectStandardError = $true
+    $process.StartInfo.WorkingDirectory = $testWorkingDirectory
 
     [void]$process.Start()
     $process.StandardInput.Write($input + "`n")

@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -75,7 +76,8 @@ public class StanVard {
         System.out.println(SEPARATOR);
 
         Scanner scanner = new Scanner(System.in);
-        List<Task> tasks = new ArrayList<>();
+        Storage storage = new Storage(Storage.DEFAULT_FILE_PATH);
+        List<Task> tasks = loadTasks(storage);
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
@@ -87,7 +89,7 @@ public class StanVard {
             System.out.println(SEPARATOR);
 
             try {
-                handleCommand(command, tasks);
+                handleCommand(command, tasks, storage);
             } catch (StanVardException exception) {
                 System.out.println(exception.getMessage());
             }
@@ -116,9 +118,10 @@ public class StanVard {
      *
      * @param command command entered by the user
      * @param tasks tasks currently stored by the chatbot
+     * @param storage task storage used to persist list changes
      * @throws StanVardException if the command is invalid
      */
-    private static void handleCommand(String command, List<Task> tasks) throws StanVardException {
+    private static void handleCommand(String command, List<Task> tasks, Storage storage) throws StanVardException {
         String trimmedCommand = command.trim();
         CommandType commandType = CommandType.fromCommand(trimmedCommand);
 
@@ -134,6 +137,7 @@ public class StanVard {
                         tasks
                 );
                 tasks.get(markIndex).markAsDone();
+                saveTasks(tasks, storage);
 
                 System.out.println("Nice! I've marked this task as done:");
                 System.out.println("  " + tasks.get(markIndex));
@@ -146,6 +150,7 @@ public class StanVard {
                         tasks
                 );
                 tasks.get(unmarkIndex).markAsNotDone();
+                saveTasks(tasks, storage);
 
                 System.out.println("OK, I've marked this task as not done yet:");
                 System.out.println("  " + tasks.get(unmarkIndex));
@@ -159,6 +164,7 @@ public class StanVard {
                 );
                 Task deletedTask = tasks.remove(deleteIndex);
 
+                saveTasks(tasks, storage);
                 printDeletedTask(deletedTask, tasks);
                 break;
 
@@ -173,7 +179,7 @@ public class StanVard {
                     );
                 }
 
-                addTask(new Todo(todoDescription), tasks);
+                addTask(new Todo(todoDescription), tasks, storage);
                 break;
 
             case DEADLINE:
@@ -209,7 +215,7 @@ public class StanVard {
                     );
                 }
 
-                addTask(new Deadline(deadlineDescription, by), tasks);
+                addTask(new Deadline(deadlineDescription, by), tasks, storage);
                 break;
 
             case EVENT:
@@ -256,7 +262,7 @@ public class StanVard {
                     );
                 }
 
-                addTask(new Event(eventDescription, from, to), tasks);
+                addTask(new Event(eventDescription, from, to), tasks, storage);
                 break;
 
             default:
@@ -318,10 +324,42 @@ public class StanVard {
      *
      * @param task the task to add
      * @param tasks task storage list
+     * @param storage task storage used to persist the added task
      */
-    private static void addTask(Task task, List<Task> tasks) {
+    private static void addTask(Task task, List<Task> tasks, Storage storage) throws StanVardException {
         tasks.add(task);
+        saveTasks(tasks, storage);
         printAddedTask(task, tasks.size());
+    }
+
+    /**
+     * Loads saved tasks, starting with an empty list if the data cannot be read.
+     *
+     * @param storage task storage to load from
+     * @return the loaded task list, or an empty list after a read failure
+     */
+    private static List<Task> loadTasks(Storage storage) {
+        try {
+            return storage.load();
+        } catch (IOException exception) {
+            System.out.println("OOPS!!! Unable to load saved tasks: " + exception.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Saves tasks and translates an I/O problem into a user-facing command error.
+     *
+     * @param tasks tasks to save
+     * @param storage task storage to save to
+     * @throws StanVardException if the task data cannot be written
+     */
+    private static void saveTasks(List<Task> tasks, Storage storage) throws StanVardException {
+        try {
+            storage.save(tasks);
+        } catch (IOException exception) {
+            throw new StanVardException("OOPS!!! Unable to save tasks: " + exception.getMessage());
+        }
     }
 
     /**
