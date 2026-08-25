@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,22 +26,65 @@ public class Storage {
     }
 
     /**
+     * Contains tasks restored from storage and warnings for skipped legacy records.
+     */
+    public static class LoadResult {
+        private final List<Task> tasks;
+        private final List<String> warnings;
+
+        /**
+         * Creates a storage load result.
+         *
+         * @param tasks restored tasks
+         * @param warnings messages about skipped records
+         */
+        public LoadResult(List<Task> tasks, List<String> warnings) {
+            this.tasks = tasks;
+            this.warnings = warnings;
+        }
+
+        /**
+         * Returns the restored tasks.
+         *
+         * @return restored tasks
+         */
+        public List<Task> getTasks() {
+            return tasks;
+        }
+
+        /**
+         * Returns warnings for records that could not be restored.
+         *
+         * @return storage warnings
+         */
+        public List<String> getWarnings() {
+            return warnings;
+        }
+    }
+
+    /**
      * Loads tasks from disk. A missing file represents an empty task list.
      *
-     * @return the tasks in their saved order
+     * @return restored tasks and warnings for skipped legacy deadline records
      * @throws IOException if saved data cannot be read or is invalid
      */
-    public List<Task> load() throws IOException {
+    public LoadResult load() throws IOException {
         List<Task> tasks = new ArrayList<>();
+        List<String> warnings = new ArrayList<>();
         if (Files.notExists(filePath)) {
-            return tasks;
+            return new LoadResult(tasks, warnings);
         }
 
         List<String> lines = Files.readAllLines(filePath, StandardCharsets.UTF_8);
         for (int index = 0; index < lines.size(); index++) {
-            tasks.add(parseTask(lines.get(index), index + 1));
+            try {
+                tasks.add(parseTask(lines.get(index), index + 1));
+            } catch (LegacyDeadlineDateException exception) {
+                warnings.add("OOPS!!! Skipped saved deadline at line " + exception.getLineNumber()
+                        + " because its date is not in yyyy-MM-dd format.");
+            }
         }
-        return tasks;
+        return new LoadResult(tasks, warnings);
     }
 
     /**
@@ -75,7 +120,7 @@ public class Storage {
         if (task instanceof Deadline) {
             Deadline deadline = (Deadline) task;
             return "D\t" + status + "\t" + escape(task.getDescription())
-                    + "\t" + escape(deadline.getBy());
+                    + "\t" + escape(deadline.getBy().toString());
         }
         if (task instanceof Event) {
             Event event = (Event) task;
@@ -111,7 +156,7 @@ public class Storage {
             if (fields.length != 4) {
                 throw invalidData(lineNumber);
             }
-            task = new Deadline(unescape(fields[2], lineNumber), unescape(fields[3], lineNumber));
+            task = new Deadline(unescape(fields[2], lineNumber), parseDeadlineDate(fields[3], lineNumber));
             break;
         case "E":
             if (fields.length != 5) {
@@ -138,6 +183,48 @@ public class Storage {
      */
     private static IOException invalidData(int lineNumber) {
         return new IOException("Invalid saved task at line " + lineNumber + ".");
+    }
+
+    /**
+     * Parses a stored ISO deadline date, identifying pre-Level 8 text dates separately.
+     *
+     * @param dateText stored deadline date
+     * @param lineNumber one-based position of the containing record
+     * @return parsed deadline date
+     * @throws IOException if the stored text has an invalid escape sequence
+     * @throws LegacyDeadlineDateException if the deadline uses a legacy non-ISO value
+     */
+    private static LocalDate parseDeadlineDate(String dateText, int lineNumber) throws IOException {
+        try {
+            return LocalDate.parse(unescape(dateText, lineNumber));
+        } catch (DateTimeParseException exception) {
+            throw new LegacyDeadlineDateException(lineNumber);
+        }
+    }
+
+    /**
+     * Identifies a Level 7 deadline record that cannot be represented as a {@link LocalDate}.
+     */
+    private static class LegacyDeadlineDateException extends IOException {
+        private final int lineNumber;
+
+        /**
+         * Creates an exception for one legacy deadline record.
+         *
+         * @param lineNumber one-based position of the record
+         */
+        LegacyDeadlineDateException(int lineNumber) {
+            this.lineNumber = lineNumber;
+        }
+
+        /**
+         * Returns the one-based position of the legacy record.
+         *
+         * @return record line number
+         */
+        int getLineNumber() {
+            return lineNumber;
+        }
     }
 
     /**

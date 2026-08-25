@@ -1,4 +1,8 @@
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -8,6 +12,8 @@ import java.util.Scanner;
  */
 public class StanVard {
     private static final String SEPARATOR = "____________________________________________________________";
+    private static final DateTimeFormatter INPUT_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(ResolverStyle.STRICT);
 
     /**
      * Represents the different commands supported by StanVard.
@@ -190,9 +196,7 @@ public class StanVard {
                 int byIndex = deadlineDetails.indexOf("/by");
 
                 if (byIndex < 0) {
-                    throw new StanVardException(
-                            "OOPS!!! A deadline must include /by followed by a date/time."
-                    );
+                    throw new StanVardException("OOPS!!! A deadline must include /by followed by a date.");
                 }
 
                 String deadlineDescription = deadlineDetails
@@ -210,12 +214,10 @@ public class StanVard {
                 }
 
                 if (by.isEmpty()) {
-                    throw new StanVardException(
-                            "OOPS!!! The deadline time cannot be empty."
-                    );
+                    throw new StanVardException("OOPS!!! The deadline date cannot be empty.");
                 }
 
-                addTask(new Deadline(deadlineDescription, by), tasks, storage);
+                addTask(new Deadline(deadlineDescription, parseDeadlineDate(by)), tasks, storage);
                 break;
 
             case EVENT:
@@ -333,6 +335,21 @@ public class StanVard {
     }
 
     /**
+     * Converts a deadline date entered in the required ISO format into a {@link LocalDate}.
+     *
+     * @param dateText date entered after the {@code /by} marker
+     * @return parsed deadline date
+     * @throws StanVardException if the date is not a valid {@code yyyy-MM-dd} value
+     */
+    private static LocalDate parseDeadlineDate(String dateText) throws StanVardException {
+        try {
+            return LocalDate.parse(dateText, INPUT_DATE_FORMAT);
+        } catch (DateTimeParseException exception) {
+            throw new StanVardException("OOPS!!! The deadline date must be in yyyy-MM-dd format.");
+        }
+    }
+
+    /**
      * Loads saved tasks, starting with an empty list if the data cannot be read.
      *
      * @param storage task storage to load from
@@ -340,7 +357,11 @@ public class StanVard {
      */
     private static List<Task> loadTasks(Storage storage) {
         try {
-            return storage.load();
+            Storage.LoadResult loadResult = storage.load();
+            for (String warning : loadResult.getWarnings()) {
+                System.out.println(warning);
+            }
+            return loadResult.getTasks();
         } catch (IOException exception) {
             System.out.println("OOPS!!! Unable to load saved tasks: " + exception.getMessage());
             return new ArrayList<>();
