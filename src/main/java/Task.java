@@ -39,6 +39,15 @@ public abstract class Task {
     }
 
     /**
+     * Returns whether this task has been completed.
+     *
+     * @return {@code true} if this task is complete
+     */
+    public boolean isDone() {
+        return isDone;
+    }
+
+    /**
      * Returns this task's description.
      *
      * @return the task description
