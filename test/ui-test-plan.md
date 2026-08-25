@@ -12,6 +12,8 @@ todo read book
 blah
 deadline return book
 deadline return book /by Sunday
+deadline return book /by 2019-02-30
+deadline return book /by 2019-10-15
 event project meeting /from Mon 2pm
 event project meeting /from Mon 2pm /to 4pm
 delete 4
@@ -45,11 +47,17 @@ ____________________________________________________________
 OOPS!!! I'm sorry, but I don't know what that means :-(
 ____________________________________________________________
 ____________________________________________________________
-OOPS!!! A deadline must include /by followed by a date/time.
+OOPS!!! A deadline must include /by followed by a date.
+____________________________________________________________
+____________________________________________________________
+OOPS!!! The deadline date must be in yyyy-MM-dd format.
+____________________________________________________________
+____________________________________________________________
+OOPS!!! The deadline date must be in yyyy-MM-dd format.
 ____________________________________________________________
 ____________________________________________________________
 Got it. I've added this task:
-  [D][ ] return book (by: Sunday)
+  [D][ ] return book (by: Oct 15 2019)
 Now you have 2 tasks in the list.
 ____________________________________________________________
 ____________________________________________________________
@@ -73,7 +81,7 @@ OOPS!!! The task number must be a positive integer.
 ____________________________________________________________
 ____________________________________________________________
 Nice! I've marked this task as done:
-  [D][X] return book (by: Sunday)
+  [D][X] return book (by: Oct 15 2019)
 ____________________________________________________________
 ____________________________________________________________
 OK, I've marked this task as not done yet:
@@ -82,7 +90,7 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] read book
-2.[D][X] return book (by: Sunday)
+2.[D][X] return book (by: Oct 15 2019)
 ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
@@ -109,7 +117,7 @@ ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] read book
-2.[D][X] return book (by: Sunday)
+2.[D][X] return book (by: Oct 15 2019)
 ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
