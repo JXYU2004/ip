@@ -9,35 +9,8 @@ java {
     targetCompatibility = JavaVersion.VERSION_25
 }
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    String jUnitVersion = '5.14.4'
-
-    testImplementation "org.junit.jupiter:junit-jupiter-api:${jUnitVersion}"
-
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${jUnitVersion}"
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.14.4'
-}
-
-test {
-    useJUnitPlatform()
-
-    testLogging {
-        events 'passed', 'skipped', 'failed'
-
-        showExceptions = true
-        exceptionFormat = 'full'
-        showCauses = true
-        showStackTraces = true
-        showStandardStreams = false
-    }
-}
-
 application {
-    mainClass = 'seedu.duke.Duke'
+    mainClass = 'StanVard'
 }
 
 jar {
