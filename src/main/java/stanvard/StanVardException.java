@@ -1,3 +1,5 @@
+package stanvard;
+
 /**
  * Represents an error caused by an invalid StanVard user command.
  */

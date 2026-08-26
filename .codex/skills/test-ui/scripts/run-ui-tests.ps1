@@ -24,7 +24,7 @@ New-Item -ItemType Directory -Path $classOutput -Force | Out-Null
 $testWorkingDirectory = Join-Path $projectRoot 'build\ui-test-working-directory'
 Remove-Item -LiteralPath $testWorkingDirectory -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Path $testWorkingDirectory -Force | Out-Null
-$sources = @(Get-ChildItem -LiteralPath $sourceRoot -Filter '*.java' -File | ForEach-Object { $_.FullName })
+$sources = @(Get-ChildItem -LiteralPath $sourceRoot -Filter '*.java' -File -Recurse | ForEach-Object { $_.FullName })
 & javac -d $classOutput @sources
 if ($LASTEXITCODE -ne 0) {
     throw 'Compilation failed; UI tests were not run.'
@@ -45,7 +45,7 @@ foreach ($testCase in $testCases) {
 
     $process = New-Object System.Diagnostics.Process
     $process.StartInfo.FileName = 'java'
-    $process.StartInfo.Arguments = "-cp `"$classOutput`" StanVard"
+    $process.StartInfo.Arguments = "-cp `"$classOutput`" stanvard.StanVard"
     $process.StartInfo.UseShellExecute = $false
     $process.StartInfo.RedirectStandardInput = $true
     $process.StartInfo.RedirectStandardOutput = $true
