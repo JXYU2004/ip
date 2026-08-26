@@ -1,3 +1,9 @@
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -6,22 +12,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Checks that task storage handles a first run and preserves all task data.
+ * Checks that task storage handles a first run, persistence, and legacy records.
  */
 public class StorageTest {
+    @TempDir
+    Path temporaryDirectory;
+
     /**
-     * Runs the storage checks without requiring an external test framework.
+     * Verifies that loading without a data file returns an empty list.
      *
-     * @param args command-line arguments, which are not used
-     * @throws Exception if a storage check fails
+     * @throws Exception if storage cannot be read
      */
-    public static void main(String[] args) throws Exception {
-        Path temporaryDirectory = Files.createTempDirectory("stanvard-storage-test");
+    @Test
+    void load_missingFile_returnsEmptyList() throws Exception {
         Path dataFile = temporaryDirectory.resolve("data").resolve("duke.txt");
         Storage storage = new Storage(dataFile);
 
         assertEquals(0, storage.load().getTasks().size(),
                 "A missing data file should load an empty list.");
+    }
+
+    /**
+     * Verifies that saving and loading preserves each task type and completion state.
+     *
+     * @throws Exception if storage cannot be read or written
+     */
+    @Test
+    void saveAndLoad_tasksRoundTrip() throws Exception {
+        Path dataFile = temporaryDirectory.resolve("data").resolve("duke.txt");
+        Storage storage = new Storage(dataFile);
 
         List<Task> savedTasks = new ArrayList<>();
         Todo todo = new Todo("read book");
@@ -44,7 +63,19 @@ public class StorageTest {
                 "Deadline details should round-trip.");
         assertEquals("[E][X] project meeting (from: Mon 2pm to: 4pm)", loadedTasks.get(2).toString(),
                 "Event details and state should round-trip.");
+    }
 
+    /**
+     * Verifies that an unsupported legacy deadline date is skipped without overwriting data.
+     *
+     * @throws Exception if storage cannot be read or written
+     */
+    @Test
+    void load_legacyDeadline_reportsWarningWithoutChangingFile() throws Exception {
+        Path dataFile = temporaryDirectory.resolve("data").resolve("duke.txt");
+        Storage storage = new Storage(dataFile);
+
+        Files.createDirectories(dataFile.getParent());
         Files.writeString(dataFile, "D\t0\tlegacy task\tSunday\n", StandardCharsets.UTF_8);
         Storage.LoadResult legacyLoadResult = storage.load();
         assertEquals(0, legacyLoadResult.getTasks().size(),
@@ -53,35 +84,5 @@ public class StorageTest {
                 legacyLoadResult.getWarnings().get(0), "A skipped legacy task should report a warning.");
         assertEquals("D\t0\tlegacy task\tSunday\n", Files.readString(dataFile, StandardCharsets.UTF_8),
                 "Loading a legacy task should not overwrite the data file.");
-
-        Files.delete(dataFile);
-        Files.delete(dataFile.getParent());
-        Files.delete(temporaryDirectory);
-        System.out.println("Storage tests passed.");
-    }
-
-    /**
-     * Verifies that two values are equal.
-     *
-     * @param expected expected value
-     * @param actual actual value
-     * @param message failure explanation
-     */
-    private static void assertEquals(Object expected, Object actual, String message) {
-        if (!expected.equals(actual)) {
-            throw new AssertionError(message + " Expected: " + expected + ", actual: " + actual);
-        }
-    }
-
-    /**
-     * Verifies that a condition is true.
-     *
-     * @param condition condition to check
-     * @param message failure explanation
-     */
-    private static void assertTrue(boolean condition, String message) {
-        if (!condition) {
-            throw new AssertionError(message);
-        }
     }
 }
