@@ -5,6 +5,7 @@ import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 /**
@@ -24,6 +25,7 @@ public class StanVard {
         MARK("mark"),
         UNMARK("unmark"),
         DELETE("delete"),
+        FIND("find"),
         TODO("todo"),
         DEADLINE("deadline"),
         EVENT("event");
@@ -174,6 +176,20 @@ public class StanVard {
 
                 saveTasks(tasks, storage);
                 printDeletedTask(deletedTask, tasks);
+                break;
+
+            case FIND:
+                String keyword = trimmedCommand
+                        .substring(commandType.getKeyword().length())
+                        .trim();
+
+                if (keyword.isEmpty()) {
+                    throw new StanVardException(
+                            "OOPS!!! The keyword to find cannot be empty."
+                    );
+                }
+
+                printMatchingTasks(keyword, tasks);
                 break;
 
             case TODO:
@@ -410,6 +426,30 @@ public class StanVard {
 
         for (int index = 0; index < tasks.size(); index++) {
             System.out.println((index + 1) + "." + tasks.get(index));
+        }
+    }
+
+    /**
+     * Prints tasks whose descriptions contain the given keyword, ignoring case.
+     *
+     * @param keyword text to search for in task descriptions
+     * @param tasks tasks to search
+     */
+    private static void printMatchingTasks(String keyword, List<Task> tasks) {
+        String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
+        int matchingTaskNumber = 1;
+
+        System.out.println("Here are the matching tasks in your list:");
+
+        for (Task task : tasks) {
+            if (task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword)) {
+                System.out.println(matchingTaskNumber + "." + task);
+                matchingTaskNumber++;
+            }
+        }
+
+        if (matchingTaskNumber == 1) {
+            System.out.println("No matching tasks found.");
         }
     }
 }
