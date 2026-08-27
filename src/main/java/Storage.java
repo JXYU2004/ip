@@ -156,7 +156,10 @@ public class Storage {
             if (fields.length != 4) {
                 throw invalidData(lineNumber);
             }
-            task = new Deadline(unescape(fields[2], lineNumber), parseDeadlineDate(fields[3], lineNumber));
+            task = new Deadline(
+                    unescape(fields[2], lineNumber),
+                    parseDeadlineDate(fields[3], lineNumber)
+            );
             break;
         case "E":
             if (fields.length != 5) {
@@ -194,7 +197,8 @@ public class Storage {
      * @throws IOException if the stored text has an invalid escape sequence
      * @throws LegacyDeadlineDateException if the deadline uses a legacy non-ISO value
      */
-    private static LocalDate parseDeadlineDate(String dateText, int lineNumber) throws IOException {
+    private static LocalDate parseDeadlineDate(String dateText, int lineNumber)
+            throws IOException {
         try {
             return LocalDate.parse(unescape(dateText, lineNumber));
         } catch (DateTimeParseException exception) {

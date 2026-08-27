@@ -33,13 +33,16 @@ public class StorageTest {
         savedTasks.add(event);
 
         storage.save(savedTasks);
-        assertTrue(Files.exists(dataFile), "Saving should create the missing data directory and file.");
+        assertTrue(Files.exists(dataFile),
+                "Saving should create the missing data directory and file.");
 
         Storage.LoadResult loadResult = storage.load();
         List<Task> loadedTasks = loadResult.getTasks();
         assertEquals(3, loadedTasks.size(), "All tasks should be loaded.");
-        assertEquals(0, loadResult.getWarnings().size(), "Valid saved tasks should not produce warnings.");
-        assertEquals("[T][X] read book", loadedTasks.get(0).toString(), "Todo state should round-trip.");
+        assertEquals(0, loadResult.getWarnings().size(),
+                "Valid saved tasks should not produce warnings.");
+        assertEquals("[T][X] read book", loadedTasks.get(0).toString(),
+                "Todo state should round-trip.");
         assertEquals("[D][ ] return book (by: Oct 15 2019)", loadedTasks.get(1).toString(),
                 "Deadline details should round-trip.");
         assertEquals("[E][X] project meeting (from: Mon 2pm to: 4pm)", loadedTasks.get(2).toString(),
@@ -49,9 +52,11 @@ public class StorageTest {
         Storage.LoadResult legacyLoadResult = storage.load();
         assertEquals(0, legacyLoadResult.getTasks().size(),
                 "A legacy text deadline should be skipped.");
-        assertEquals("OOPS!!! Skipped saved deadline at line 1 because its date is not in yyyy-MM-dd format.",
+        assertEquals(
+                "OOPS!!! Skipped saved deadline at line 1 because its date is not in yyyy-MM-dd format.",
                 legacyLoadResult.getWarnings().get(0), "A skipped legacy task should report a warning.");
-        assertEquals("D\t0\tlegacy task\tSunday\n", Files.readString(dataFile, StandardCharsets.UTF_8),
+        assertEquals("D\t0\tlegacy task\tSunday\n",
+                Files.readString(dataFile, StandardCharsets.UTF_8),
                 "Loading a legacy task should not overwrite the data file.");
 
         Files.delete(dataFile);
