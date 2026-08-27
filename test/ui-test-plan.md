@@ -22,6 +22,9 @@ mark two
 mark 2
 unmark 1
 list
+find BOOK
+find unicorn
+find
 bye
 ```
 ### Expected output
@@ -91,6 +94,18 @@ ____________________________________________________________
 Here are the tasks in your list:
 1.[T][ ] read book
 2.[D][X] return book (by: Oct 15 2019)
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+1.[T][ ] read book
+2.[D][X] return book (by: Oct 15 2019)
+____________________________________________________________
+____________________________________________________________
+Here are the matching tasks in your list:
+No matching tasks found.
+____________________________________________________________
+____________________________________________________________
+OOPS!!! The keyword to find cannot be empty.
 ____________________________________________________________
 Bye. Hope to see you again soon!
 ____________________________________________________________
