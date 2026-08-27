@@ -21,7 +21,7 @@ jar {
 }
 
 shadowJar {
-    archiveFileName = 'duke.jar'
+    archiveFileName = 'StanVard.jar'
 }
 
 run {
