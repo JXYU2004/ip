@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * Starts StanVard, displays its greeting, and manages an in-memory task list until the user exits.
+ * Starts StanVard, displays its greeting, and manages an in-memory task list
+ * until the user exits.
  */
 public class StanVard {
     private static final String SEPARATOR = "____________________________________________________________";
@@ -127,7 +128,8 @@ public class StanVard {
      * @param storage task storage used to persist list changes
      * @throws StanVardException if the command is invalid
      */
-    private static void handleCommand(String command, List<Task> tasks, Storage storage) throws StanVardException {
+    private static void handleCommand(String command, List<Task> tasks, Storage storage)
+            throws StanVardException {
         String trimmedCommand = command.trim();
         CommandType commandType = CommandType.fromCommand(trimmedCommand);
 
@@ -196,7 +198,9 @@ public class StanVard {
                 int byIndex = deadlineDetails.indexOf("/by");
 
                 if (byIndex < 0) {
-                    throw new StanVardException("OOPS!!! A deadline must include /by followed by a date.");
+                    throw new StanVardException(
+                            "OOPS!!! A deadline must include /by followed by a date."
+                    );
                 }
 
                 String deadlineDescription = deadlineDetails
@@ -328,7 +332,8 @@ public class StanVard {
      * @param tasks task storage list
      * @param storage task storage used to persist the added task
      */
-    private static void addTask(Task task, List<Task> tasks, Storage storage) throws StanVardException {
+    private static void addTask(Task task, List<Task> tasks, Storage storage)
+            throws StanVardException {
         tasks.add(task);
         saveTasks(tasks, storage);
         printAddedTask(task, tasks.size());
