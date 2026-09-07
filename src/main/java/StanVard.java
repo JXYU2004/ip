@@ -338,7 +338,9 @@ public class StanVard {
             );
         }
 
-        return taskNumber - 1;
+        int taskIndex = taskNumber - 1;
+        assert taskIndex >= 0 && taskIndex < tasks.size();
+        return taskIndex;
     }
 
     /**
