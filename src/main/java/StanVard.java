@@ -4,6 +4,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
@@ -53,16 +54,12 @@ public class StanVard {
          * @throws StanVardException if the command is unknown
          */
         public static CommandType fromCommand(String command) throws StanVardException {
-            for (CommandType commandType : CommandType.values()) {
-                if (command.equals(commandType.keyword)
-                        || command.startsWith(commandType.keyword + " ")) {
-                    return commandType;
-                }
-            }
-
-            throw new StanVardException(
-                    "OOPS!!! I'm sorry, but I don't know what that means :-("
-            );
+            return Arrays.stream(CommandType.values())
+                    .filter(commandType -> command.equals(commandType.keyword)
+                            || command.startsWith(commandType.keyword + " "))
+                    .findFirst()
+                    .orElseThrow(() -> new StanVardException(
+                            "OOPS!!! I'm sorry, but I don't know what that means :-("));
         }
     }
 

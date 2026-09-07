@@ -99,10 +99,9 @@ public class Storage {
             Files.createDirectories(parentDirectory);
         }
 
-        List<String> lines = new ArrayList<>();
-        for (Task task : tasks) {
-            lines.add(formatTask(task));
-        }
+        List<String> lines = tasks.stream()
+                .map(Storage::formatTask)
+                .toList();
         Files.write(filePath, lines, StandardCharsets.UTF_8);
     }
 
