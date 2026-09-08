@@ -1,6 +1,7 @@
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -141,7 +142,7 @@ public class StanVard {
         } finally {
             System.setOut(originalOutput);
         }
-        return output.toString(java.nio.charset.StandardCharsets.UTF_8).trim();
+        return output.toString(StandardCharsets.UTF_8).trim();
     }
 
     /**
