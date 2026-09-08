@@ -1,4 +1,6 @@
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -16,6 +18,17 @@ public class StanVard {
     private static final String SEPARATOR = "____________________________________________________________";
     private static final DateTimeFormatter INPUT_DATE_FORMAT =
             DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(ResolverStyle.STRICT);
+
+    private final Storage storage;
+    private final List<Task> tasks;
+
+    /**
+     * Creates a StanVard instance with tasks loaded from the default storage file.
+     */
+    public StanVard() {
+        storage = new Storage(Storage.DEFAULT_FILE_PATH);
+        tasks = loadTasks(storage);
+    }
 
     /**
      * Represents the different commands supported by StanVard.
@@ -84,9 +97,8 @@ public class StanVard {
         System.out.println("What can I do for you?");
         System.out.println(SEPARATOR);
 
+        StanVard stanVard = new StanVard();
         Scanner scanner = new Scanner(System.in);
-        Storage storage = new Storage(Storage.DEFAULT_FILE_PATH);
-        List<Task> tasks = loadTasks(storage);
 
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
@@ -98,7 +110,7 @@ public class StanVard {
             System.out.println(SEPARATOR);
 
             try {
-                handleCommand(command, tasks, storage);
+                stanVard.handleCommand(command);
             } catch (StanVardException exception) {
                 System.out.println(exception.getMessage());
             }
@@ -108,6 +120,40 @@ public class StanVard {
 
         System.out.println("Bye. Hope to see you again soon!");
         System.out.println(SEPARATOR);
+    }
+
+    /**
+     * Processes one command for a non-console client such as the JavaFX GUI.
+     *
+     * @param command command entered by the user
+     * @return the response produced by StanVard
+     */
+    public synchronized String processCommand(String command) {
+        if (command.trim().equals("bye")) {
+            return "Bye. Hope to see you again soon!";
+        }
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        PrintStream originalOutput = System.out;
+        try {
+            System.setOut(new PrintStream(output, true));
+            handleCommand(command);
+        } catch (StanVardException exception) {
+            System.out.println(exception.getMessage());
+        } finally {
+            System.setOut(originalOutput);
+        }
+        return output.toString(java.nio.charset.StandardCharsets.UTF_8).trim();
+    }
+
+    /**
+     * Processes a command using this instance's task list and storage.
+     *
+     * @param command command entered by the user
+     * @throws StanVardException if the command is invalid
+     */
+    private void handleCommand(String command) throws StanVardException {
+        handleCommand(command, tasks, storage);
     }
 
     /**

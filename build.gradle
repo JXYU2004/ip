@@ -1,7 +1,16 @@
 plugins {
     id 'java'
     id 'application'
+    id 'checkstyle'
     id 'com.gradleup.shadow' version '9.5.1'
+}
+
+repositories {
+    mavenCentral()
+}
+
+checkstyle {
+    toolVersion = '11.0.0'
 }
 
 java {
@@ -10,7 +19,7 @@ java {
 }
 
 application {
-    mainClass = 'StanVard'
+    mainClass = 'Launcher'
 }
 
 jar {
@@ -26,4 +35,28 @@ shadowJar {
 
 run {
     standardInput = System.in
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    String javaFxVersion = '17.0.7'
+
+    implementation("org.openjfx:javafx-base:${javaFxVersion}:win")
+    implementation("org.openjfx:javafx-base:${javaFxVersion}:mac")
+    implementation("org.openjfx:javafx-base:${javaFxVersion}:linux")
+
+    implementation("org.openjfx:javafx-controls:${javaFxVersion}:win")
+    implementation("org.openjfx:javafx-controls:${javaFxVersion}:mac")
+    implementation("org.openjfx:javafx-controls:${javaFxVersion}:linux")
+
+    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:win")
+    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:mac")
+    implementation("org.openjfx:javafx-fxml:${javaFxVersion}:linux")
+
+    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:win")
+    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:mac")
+    implementation("org.openjfx:javafx-graphics:${javaFxVersion}:linux")
 }
