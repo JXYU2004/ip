@@ -118,6 +118,7 @@ Aim: Verify tasks and their completion state persist into a new application sess
 list
 bye
 ```
+
 ### Expected output
 ```text
 ____________________________________________________________
@@ -128,6 +129,39 @@ ____________________________________________________________
 |____/  |_| /_/   \_\_| \_|   \_/ /_/   \_\_| \_\____/ 
 Hello! I'm StanVard.
 What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Here are the tasks in your list:
+1.[T][ ] read book
+2.[D][X] return book (by: Oct 15 2019)
+____________________________________________________________
+Bye. Hope to see you again soon!
+____________________________________________________________
+```
+
+## Sorting orders deadlines first
+Aim: Verify that sorting displays deadline tasks first while leaving the stored task order unchanged.
+### Input
+```text
+sort
+list
+bye
+```
+### Expected output
+```text
+____________________________________________________________
+ ____  _____    _    _   _ __     __ _    ____  ____  
+/ ___||_   _|  / \  | \ | |\ \   / / / \  |  _ \|  _ \ 
+\___ \  | |   / _ \ |  \| | \ \ / / / _ \ | |_) | | | |
+ ___) | | |  / ___ \| |\  |  \ V / / ___ \|  _ <| |_| |
+|____/  |_| /_/   \_\_| \_|   \_/ /_/   \_\_| \_\____/ 
+Hello! I'm StanVard.
+What can I do for you?
+____________________________________________________________
+____________________________________________________________
+Here are the tasks sorted by deadline:
+1.[D][X] return book (by: Oct 15 2019)
+2.[T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
 Here are the tasks in your list:

@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
@@ -39,6 +40,7 @@ public class StanVard {
         UNMARK("unmark"),
         DELETE("delete"),
         FIND("find"),
+        SORT("sort"),
         TODO("todo"),
         DEADLINE("deadline"),
         EVENT("event");
@@ -236,6 +238,10 @@ public class StanVard {
                 }
 
                 printMatchingTasks(keyword, tasks);
+                break;
+
+            case SORT:
+                printSortedTaskList(tasks);
                 break;
 
             case TODO:
@@ -473,6 +479,35 @@ public class StanVard {
         for (int index = 0; index < tasks.size(); index++) {
             System.out.println((index + 1) + "." + tasks.get(index));
         }
+    }
+
+    /**
+     * Prints a stable view of tasks ordered by deadline, with tasks without deadlines last.
+     *
+     * @param tasks tasks currently stored by the chatbot
+     */
+    private static void printSortedTaskList(List<Task> tasks) {
+        List<Task> sortedTasks = new ArrayList<>(tasks);
+        sortedTasks.sort(Comparator.comparing(
+                StanVard::getDeadlineOrNull,
+                Comparator.nullsLast(Comparator.naturalOrder())
+        ));
+
+        System.out.println("Here are the tasks sorted by deadline:");
+
+        for (int index = 0; index < sortedTasks.size(); index++) {
+            System.out.println((index + 1) + "." + sortedTasks.get(index));
+        }
+    }
+
+    /**
+     * Returns the deadline date used by the sort command.
+     *
+     * @param task task whose deadline is requested
+     * @return the deadline date, or {@code null} for tasks without deadlines
+     */
+    private static LocalDate getDeadlineOrNull(Task task) {
+        return task instanceof Deadline ? ((Deadline) task).getBy() : null;
     }
 
     /**
