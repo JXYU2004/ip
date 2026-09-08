@@ -112,6 +112,7 @@ public class Storage {
      * @return one storage record
      */
     private static String formatTask(Task task) {
+        assert task != null;
         String status = task.isDone() ? "1" : "0";
         if (task instanceof Todo) {
             return "T\t" + status + "\t" + escape(task.getDescription());
@@ -171,6 +172,7 @@ public class Storage {
                 throw invalidData(lineNumber);
         }
 
+        assert task != null;
         if (fields[1].equals("1")) {
             task.markAsDone();
         }
