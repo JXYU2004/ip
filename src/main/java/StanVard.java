@@ -6,9 +6,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 /**
  * Starts StanVard, displays its greeting, and manages an in-memory task list
@@ -66,16 +68,12 @@ public class StanVard {
          * @throws StanVardException if the command is unknown
          */
         public static CommandType fromCommand(String command) throws StanVardException {
-            for (CommandType commandType : CommandType.values()) {
-                if (command.equals(commandType.keyword)
-                        || command.startsWith(commandType.keyword + " ")) {
-                    return commandType;
-                }
-            }
-
-            throw new StanVardException(
-                    "OOPS!!! I'm sorry, but I don't know what that means :-("
-            );
+            return Arrays.stream(CommandType.values())
+                    .filter(commandType -> command.equals(commandType.keyword)
+                            || command.startsWith(commandType.keyword + " "))
+                    .findFirst()
+                    .orElseThrow(() -> new StanVardException(
+                            "OOPS!!! I'm sorry, but I don't know what that means :-("));
         }
     }
 
@@ -427,9 +425,7 @@ public class StanVard {
     private static List<Task> loadTasks(Storage storage) {
         try {
             Storage.LoadResult loadResult = storage.load();
-            for (String warning : loadResult.getWarnings()) {
-                System.out.println(warning);
-            }
+            loadResult.getWarnings().forEach(System.out::println);
             return loadResult.getTasks();
         } catch (IOException exception) {
             System.out.println("OOPS!!! Unable to load saved tasks: " + exception.getMessage());
@@ -485,18 +481,16 @@ public class StanVard {
      */
     private static void printMatchingTasks(String keyword, List<Task> tasks) {
         String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
-        int matchingTaskNumber = 1;
-
         System.out.println("Here are the matching tasks in your list:");
 
-        for (Task task : tasks) {
-            if (task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword)) {
-                System.out.println(matchingTaskNumber + "." + task);
-                matchingTaskNumber++;
-            }
-        }
+        List<Task> matchingTasks = tasks.stream()
+                .filter(task -> task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword))
+                .toList();
 
-        if (matchingTaskNumber == 1) {
+        IntStream.range(0, matchingTasks.size())
+                .forEach(index -> System.out.println((index + 1) + "." + matchingTasks.get(index)));
+
+        if (matchingTasks.isEmpty()) {
             System.out.println("No matching tasks found.");
         }
     }
