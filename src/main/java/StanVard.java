@@ -145,16 +145,6 @@ public class StanVard {
     }
 
     /**
-     * Processes a command using this instance's task list and storage.
-     *
-     * @param command command entered by the user
-     * @throws StanVardException if the command is invalid
-     */
-    private void handleCommand(String command) throws StanVardException {
-        handleCommand(command, tasks, storage);
-    }
-
-    /**
      * Prints the confirmation shown after adding a task.
      *
      * @param task the added task
@@ -164,6 +154,16 @@ public class StanVard {
         System.out.println("Got it. I've added this task:");
         System.out.println("  " + task);
         System.out.println("Now you have " + taskCount + " tasks in the list.");
+    }
+
+    /**
+     * Processes a command using this instance's task list and storage.
+     *
+     * @param command command entered by the user
+     * @throws StanVardException if the command is invalid
+     */
+    private void handleCommand(String command) throws StanVardException {
+        handleCommand(command, tasks, storage);
     }
 
     /**
