@@ -145,30 +145,30 @@ public class Storage {
 
         Task task;
         switch (fields[0]) {
-        case "T":
-            if (fields.length != 3) {
+            case "T":
+                if (fields.length != 3) {
+                    throw invalidData(lineNumber);
+                }
+                task = new Todo(unescape(fields[2], lineNumber));
+                break;
+            case "D":
+                if (fields.length != 4) {
+                    throw invalidData(lineNumber);
+                }
+                task = new Deadline(
+                        unescape(fields[2], lineNumber),
+                        parseDeadlineDate(fields[3], lineNumber)
+                );
+                break;
+            case "E":
+                if (fields.length != 5) {
+                    throw invalidData(lineNumber);
+                }
+                task = new Event(unescape(fields[2], lineNumber), unescape(fields[3], lineNumber),
+                        unescape(fields[4], lineNumber));
+                break;
+            default:
                 throw invalidData(lineNumber);
-            }
-            task = new Todo(unescape(fields[2], lineNumber));
-            break;
-        case "D":
-            if (fields.length != 4) {
-                throw invalidData(lineNumber);
-            }
-            task = new Deadline(
-                    unescape(fields[2], lineNumber),
-                    parseDeadlineDate(fields[3], lineNumber)
-            );
-            break;
-        case "E":
-            if (fields.length != 5) {
-                throw invalidData(lineNumber);
-            }
-            task = new Event(unescape(fields[2], lineNumber), unescape(fields[3], lineNumber),
-                    unescape(fields[4], lineNumber));
-            break;
-        default:
-            throw invalidData(lineNumber);
         }
 
         if (fields[1].equals("1")) {
