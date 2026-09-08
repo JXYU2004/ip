@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -58,6 +59,16 @@ public class StorageTest {
         assertEquals("D\t0\tlegacy task\tSunday\n",
                 Files.readString(dataFile, StandardCharsets.UTF_8),
                 "Loading a legacy task should not overwrite the data file.");
+
+        Files.writeString(dataFile, "T\t2\tinvalid status\n", StandardCharsets.UTF_8);
+        boolean invalidRecordRejected = false;
+        try {
+            storage.load();
+        } catch (IOException exception) {
+            invalidRecordRejected = true;
+        }
+        assertTrue(invalidRecordRejected,
+                "Loading a record with an invalid status should fail.");
 
         Files.delete(dataFile);
         Files.delete(dataFile.getParent());
