@@ -13,6 +13,8 @@ import java.util.List;
 public class Storage {
     /** The relative location used by the application for its task data. */
     public static final Path DEFAULT_FILE_PATH = Path.of("data", "duke.txt");
+    private static final String INCOMPLETE_STATUS = "0";
+    private static final String COMPLETED_STATUS = "1";
 
     private final Path filePath;
 
@@ -114,7 +116,7 @@ public class Storage {
      */
     private static String formatTask(Task task) {
         assert task != null;
-        String status = task.isDone() ? "1" : "0";
+        String status = task.isDone() ? COMPLETED_STATUS : INCOMPLETE_STATUS;
         if (task instanceof Todo) {
             return "T\t" + status + "\t" + escape(task.getDescription());
         }
@@ -141,7 +143,8 @@ public class Storage {
      */
     private static Task parseTask(String line, int lineNumber) throws IOException {
         String[] fields = line.split("\\t", -1);
-        if (fields.length < 3 || !(fields[1].equals("0") || fields[1].equals("1"))) {
+        if (fields.length < 3
+                || !(fields[1].equals(INCOMPLETE_STATUS) || fields[1].equals(COMPLETED_STATUS))) {
             throw invalidData(lineNumber);
         }
 
@@ -174,10 +177,20 @@ public class Storage {
         }
 
         assert task != null;
-        if (fields[1].equals("1")) {
+        if (isCompleted(fields[1])) {
             task.markAsDone();
         }
         return task;
+    }
+
+    /**
+     * Checks whether a stored status field represents a completed task.
+     *
+     * @param status stored completion status
+     * @return whether the task was completed
+     */
+    private static boolean isCompleted(String status) {
+        return status.equals(COMPLETED_STATUS);
     }
 
     /**

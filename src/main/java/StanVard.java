@@ -141,29 +141,11 @@ public class StanVard {
                 break;
 
             case MARK:
-                int markIndex = parseTaskIndex(
-                        trimmedCommand,
-                        commandType.getKeyword(),
-                        tasks
-                );
-                tasks.get(markIndex).markAsDone();
-                saveTasks(tasks, storage);
-
-                System.out.println("Nice! I've marked this task as done:");
-                System.out.println("  " + tasks.get(markIndex));
+                updateTaskStatus(trimmedCommand, commandType, tasks, storage, true);
                 break;
 
             case UNMARK:
-                int unmarkIndex = parseTaskIndex(
-                        trimmedCommand,
-                        commandType.getKeyword(),
-                        tasks
-                );
-                tasks.get(unmarkIndex).markAsNotDone();
-                saveTasks(tasks, storage);
-
-                System.out.println("OK, I've marked this task as not done yet:");
-                System.out.println("  " + tasks.get(unmarkIndex));
+                updateTaskStatus(trimmedCommand, commandType, tasks, storage, false);
                 break;
 
             case DELETE:
@@ -179,9 +161,7 @@ public class StanVard {
                 break;
 
             case FIND:
-                String keyword = trimmedCommand
-                        .substring(commandType.getKeyword().length())
-                        .trim();
+                String keyword = getCommandArgument(trimmedCommand, commandType);
 
                 if (keyword.isEmpty()) {
                     throw new StanVardException(
@@ -193,9 +173,7 @@ public class StanVard {
                 break;
 
             case TODO:
-                String todoDescription = trimmedCommand
-                        .substring(commandType.getKeyword().length())
-                        .trim();
+                String todoDescription = getCommandArgument(trimmedCommand, commandType);
 
                 if (todoDescription.isEmpty()) {
                     throw new StanVardException(
@@ -207,9 +185,7 @@ public class StanVard {
                 break;
 
             case DEADLINE:
-                String deadlineDetails = trimmedCommand
-                        .substring(commandType.getKeyword().length())
-                        .trim();
+                String deadlineDetails = getCommandArgument(trimmedCommand, commandType);
 
                 int byIndex = deadlineDetails.indexOf("/by");
 
@@ -241,9 +217,7 @@ public class StanVard {
                 break;
 
             case EVENT:
-                String eventDetails = trimmedCommand
-                        .substring(commandType.getKeyword().length())
-                        .trim();
+                String eventDetails = getCommandArgument(trimmedCommand, commandType);
 
                 int fromIndex = eventDetails.indexOf("/from");
                 int toIndex = eventDetails.indexOf("/to");
@@ -292,6 +266,49 @@ public class StanVard {
                         "OOPS!!! I'm sorry, but I don't know what that means :-("
                 );
         }
+    }
+
+    /**
+     * Updates a task's completion status and prints the corresponding confirmation.
+     *
+     * @param command trimmed command entered by the user
+     * @param commandType command type being handled
+     * @param tasks tasks currently stored by the chatbot
+     * @param storage task storage used to persist the change
+     * @param markDone whether the task should be marked done
+     * @throws StanVardException if the task number is invalid or saving fails
+     */
+    private static void updateTaskStatus(String command, CommandType commandType,
+            List<Task> tasks, Storage storage, boolean markDone) throws StanVardException {
+        int taskIndex = parseTaskIndex(command, commandType.getKeyword(), tasks);
+        Task task = tasks.get(taskIndex);
+
+        if (markDone) {
+            task.markAsDone();
+        } else {
+            task.markAsNotDone();
+        }
+
+        saveTasks(tasks, storage);
+
+        if (markDone) {
+            System.out.println("Nice! I've marked this task as done:");
+        } else {
+            System.out.println("OK, I've marked this task as not done yet:");
+        }
+
+        System.out.println("  " + task);
+    }
+
+    /**
+     * Returns the trimmed text following a command keyword.
+     *
+     * @param command trimmed command entered by the user
+     * @param commandType command type whose keyword should be removed
+     * @return command argument, or an empty string when none was supplied
+     */
+    private static String getCommandArgument(String command, CommandType commandType) {
+        return command.substring(commandType.getKeyword().length()).trim();
     }
 
     /**
