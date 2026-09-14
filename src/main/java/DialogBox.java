@@ -9,6 +9,8 @@ import javafx.scene.layout.HBox;
  * A reusable conversation message displayed in the StanVard window.
  */
 public class DialogBox extends HBox {
+    private static final String ERROR_PREFIX = "OOPS!!!";
+
     @FXML
     private Label dialog;
 
@@ -27,5 +29,6 @@ public class DialogBox extends HBox {
             throw new IllegalStateException("Unable to load the dialog layout.", exception);
         }
         dialog.setText(text);
+        getStyleClass().add(text.startsWith(ERROR_PREFIX) ? "error-message" : "normal-message");
     }
 }

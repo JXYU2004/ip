@@ -6,6 +6,6 @@
 <fx:root type="javafx.scene.layout.HBox" xmlns="http://javafx.com/javafx/17"
          xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <Label fx:id="dialog" wrapText="true" />
+        <Label fx:id="dialog" maxWidth="460.0" wrapText="true" />
     </children>
 </fx:root>
