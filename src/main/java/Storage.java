@@ -150,14 +150,14 @@ public class Storage {
                 if (fields.length != 3) {
                     throw invalidData(lineNumber);
                 }
-                task = new Todo(unescape(fields[2], lineNumber));
+                task = new Todo(requireNonBlank(unescape(fields[2], lineNumber), lineNumber));
                 break;
             case "D":
                 if (fields.length != 4) {
                     throw invalidData(lineNumber);
                 }
                 task = new Deadline(
-                        unescape(fields[2], lineNumber),
+                        requireNonBlank(unescape(fields[2], lineNumber), lineNumber),
                         parseDeadlineDate(fields[3], lineNumber)
                 );
                 break;
@@ -165,8 +165,9 @@ public class Storage {
                 if (fields.length != 5) {
                     throw invalidData(lineNumber);
                 }
-                task = new Event(unescape(fields[2], lineNumber), unescape(fields[3], lineNumber),
-                        unescape(fields[4], lineNumber));
+                task = new Event(requireNonBlank(unescape(fields[2], lineNumber), lineNumber),
+                        requireNonBlank(unescape(fields[3], lineNumber), lineNumber),
+                        requireNonBlank(unescape(fields[4], lineNumber), lineNumber));
                 break;
             default:
                 throw invalidData(lineNumber);
@@ -187,6 +188,21 @@ public class Storage {
      */
     private static IOException invalidData(int lineNumber) {
         return new IOException("Invalid saved task at line " + lineNumber + ".");
+    }
+
+    /**
+     * Ensures a required persisted field contains meaningful text.
+     *
+     * @param value decoded field value
+     * @param lineNumber one-based position of the record
+     * @return the unchanged non-blank value
+     * @throws IOException if the field is blank
+     */
+    private static String requireNonBlank(String value, int lineNumber) throws IOException {
+        if (value.isBlank()) {
+            throw invalidData(lineNumber);
+        }
+        return value;
     }
 
     /**

@@ -100,7 +100,7 @@ public class StanVard {
         Scanner scanner = new Scanner(System.in);
 
         while (scanner.hasNextLine()) {
-            String command = scanner.nextLine();
+            String command = scanner.nextLine().trim();
 
             if (command.equals("bye")) {
                 break;
@@ -128,7 +128,7 @@ public class StanVard {
      * @return the response produced by StanVard
      */
     public synchronized String processCommand(String command) {
-        if (command.trim().equals("bye")) {
+        if (command != null && command.trim().equals("bye")) {
             return "Bye. Hope to see you again soon!";
         }
 
@@ -177,11 +177,16 @@ public class StanVard {
      */
     private static void handleCommand(String command, List<Task> tasks, Storage storage)
             throws StanVardException {
+        if (command == null) {
+            throw new StanVardException("OOPS!!! I'm sorry, but I don't know what that means :-(");
+        }
+
         String trimmedCommand = command.trim();
         CommandType commandType = CommandType.fromCommand(trimmedCommand);
 
         switch (commandType) {
             case LIST:
+                ensureNoArguments(trimmedCommand, commandType.getKeyword());
                 printTaskList(tasks);
                 break;
 
@@ -361,6 +366,12 @@ public class StanVard {
             );
         }
 
+        if (!numberText.matches("[0-9]+")) {
+            throw new StanVardException(
+                    "OOPS!!! The task number must be a positive integer."
+            );
+        }
+
         int taskNumber;
 
         try {
@@ -386,6 +397,19 @@ public class StanVard {
         int taskIndex = taskNumber - 1;
         assert taskIndex >= 0 && taskIndex < tasks.size();
         return taskIndex;
+    }
+
+    /**
+     * Rejects unexpected arguments for a command that takes none.
+     *
+     * @param command trimmed command entered by the user
+     * @param keyword argument-free command keyword
+     * @throws StanVardException if arguments were supplied
+     */
+    private static void ensureNoArguments(String command, String keyword) throws StanVardException {
+        if (!command.equals(keyword)) {
+            throw new StanVardException("OOPS!!! The " + keyword + " command does not accept arguments.");
+        }
     }
 
     /**
