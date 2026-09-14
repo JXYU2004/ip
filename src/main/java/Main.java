@@ -22,6 +22,7 @@ public class Main extends Application {
         Parent root = loader.load();
         stage.setTitle("StanVard");
         stage.setScene(new Scene(root));
+        stage.getScene().getStylesheets().add(getClass().getResource("/view/stanvard.css").toExternalForm());
         stage.show();
     }
 }
