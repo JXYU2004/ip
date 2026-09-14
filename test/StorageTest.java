@@ -70,6 +70,16 @@ public class StorageTest {
         assertTrue(invalidRecordRejected,
                 "Loading a record with an invalid status should fail.");
 
+        Files.writeString(dataFile, "T\t0\t   \n", StandardCharsets.UTF_8);
+        boolean blankDescriptionRejected = false;
+        try {
+            storage.load();
+        } catch (IOException exception) {
+            blankDescriptionRejected = true;
+        }
+        assertTrue(blankDescriptionRejected,
+                "A stored task with a blank description should fail.");
+
         Files.delete(dataFile);
         Files.delete(dataFile.getParent());
         Files.delete(temporaryDirectory);
