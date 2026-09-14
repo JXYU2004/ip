@@ -1,40 +1,27 @@
-# StanVard User Guide
+# StanVard
 
-StanVard is a task manager for keeping track of todos, deadlines, and events.
-Enter one command at a time in the console or JavaFX interface.
+StanVard is a simple task manager for todos, deadlines, and events. Use it in
+the console or in the JavaFX desktop interface by entering one command at a time.
 
-## Adding tasks
+## Commands
 
-Add a todo with `todo <description>`:
+| Command | Syntax | Example |
+| --- | --- | --- |
+| Add a todo | `todo <description>` | `todo read book` |
+| Add a deadline | `deadline <description> /by <yyyy-MM-dd>` | `deadline submit report /by 2026-12-31` |
+| Add an event | `event <description> /from <start> /to <end>` | `event project meeting /from Monday /to Tuesday` |
+| View tasks | `list` | `list` |
+| Mark done | `mark <number>` | `mark 1` |
+| Mark not done | `unmark <number>` | `unmark 1` |
+| Delete a task | `delete <number>` | `delete 1` |
+| Search tasks | `find <keyword>` | `find report` |
+| Exit | `bye` | `bye` |
 
-```text
-todo read book
-```
+## Notes
 
-Add a deadline with `deadline <description> /by <yyyy-MM-dd>`:
-
-```text
-deadline submit report /by 2026-12-31
-```
-
-Add an event with `event <description> /from <start> /to <end>`:
-
-```text
-event project meeting /from Monday /to Tuesday
-```
-
-## Managing tasks
-
-- `list` displays all tasks in their stored order.
-- `mark <number>` marks a task as done.
-- `unmark <number>` marks a task as not done.
-- `delete <number>` removes a task.
-- `find <keyword>` displays tasks whose descriptions contain the keyword.
-- `bye` exits StanVard.
-
-Task numbers are one-based and refer to the order shown by `list`.
-
-## Saved tasks
-
-StanVard saves changes automatically in `data/duke.txt` and loads them when it
-starts. The file is created when the first task is saved.
+- Task numbers are one-based and follow the order shown by `list`.
+- Deadline dates must use the `yyyy-MM-dd` format, for example `2026-12-31`.
+- Event times are stored as text, so use clear values such as `Mon 2pm` and `4pm`.
+- StanVard saves changes automatically and reloads them when it starts.
+- Empty descriptions, missing parameters, invalid task numbers, unknown commands,
+  and malformed saved data are reported with a helpful error message.
