@@ -24,8 +24,8 @@ public class MainWindow {
      */
     @FXML
     private void initialize() {
-        addMessage("Hello! I'm StanVard.");
-        addMessage("What can I do for you?");
+        addMessage("Hello! I'm StanVard, your friendly task companion.");
+        addMessage("What shall we tackle today?");
         userInput.requestFocus();
     }
 

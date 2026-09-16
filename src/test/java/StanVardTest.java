@@ -31,21 +31,21 @@ class StanVardTest {
 
     @Test
     void supportsTaskLifecycleAndSearch() throws Exception {
-        assertEquals("Got it. I've added this task:\n  [T][ ] read book\n"
-                        + "Now you have 1 tasks in the list.",
+        assertEquals("Nice! I've added this task:\n  [T][ ] read book\n"
+                        + "You're up to 1 tasks now — nicely organized.",
                 execute("todo read book"));
-        assertEquals("Got it. I've added this task:\n  [D][ ] return book (by: Oct 15 2019)\n"
-                        + "Now you have 2 tasks in the list.",
+        assertEquals("Nice! I've added this task:\n  [D][ ] return book (by: Oct 15 2019)\n"
+                        + "You're up to 2 tasks now — nicely organized.",
                 execute("deadline return book /by 2019-10-15"));
-        assertEquals("Got it. I've added this task:\n  [E][ ] project meeting (from: Mon 2pm to: 4pm)\n"
-                        + "Now you have 3 tasks in the list.",
+        assertEquals("Nice! I've added this task:\n  [E][ ] project meeting (from: Mon 2pm to: 4pm)\n"
+                        + "You're up to 3 tasks now — nicely organized.",
                 execute("event project meeting /from Mon 2pm /to 4pm"));
-        assertEquals("Nice! I've marked this task as done:\n  [T][X] read book", execute("mark 1"));
-        assertEquals("OK, I've marked this task as not done yet:\n  [T][ ] read book", execute("unmark 1"));
-        assertEquals("Here are the matching tasks in your list:\n1.[T][ ] read book\n"
+        assertEquals("All set! I've marked this task as done:\n  [T][X] read book", execute("mark 1"));
+        assertEquals("No problem! I've marked this task as not done yet:\n  [T][ ] read book", execute("unmark 1"));
+        assertEquals("Here are the tasks matching your search:\n1.[T][ ] read book\n"
                         + "2.[D][ ] return book (by: Oct 15 2019)", execute("find BOOK"));
-        assertEquals("Noted. I've removed this task:\n  [D][ ] return book (by: Oct 15 2019)\n"
-                        + "Now you have 2 tasks in the list.",
+        assertEquals("Poof! I've removed this task:\n  [D][ ] return book (by: Oct 15 2019)\n"
+                        + "You're down to 2 tasks now.",
                 execute("delete 2"));
     }
 
