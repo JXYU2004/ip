@@ -3,6 +3,13 @@
 StanVard is a simple task manager for todos, deadlines, and events. Use it in
 the console or in the JavaFX desktop interface by entering one command at a time.
 
+## Getting started
+
+Use JDK 25 and run `gradlew.bat run` to open the desktop interface. To use the
+console, build the application with `gradlew.bat shadowJar`, then run
+`java -cp build/libs/stanvard.jar StanVard` from the project directory.
+StanVard greets you when it starts and confirms each successful action.
+
 ## Commands
 
 | Command | Syntax | Example |
@@ -25,3 +32,8 @@ the console or in the JavaFX desktop interface by entering one command at a time
 - StanVard saves changes automatically and reloads them when it starts.
 - Empty descriptions, missing parameters, invalid task numbers, unknown commands,
   and malformed saved data are reported with a helpful error message.
+
+## Acknowledgements
+
+StanVard builds on the NUS CS2103T introductory project starter material and
+uses JavaFX for its desktop interface.
