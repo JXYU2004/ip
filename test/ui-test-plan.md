@@ -35,16 +35,16 @@ ____________________________________________________________
 \___ \  | |   / _ \ |  \| | \ \ / / / _ \ | |_) | | | |
  ___) | | |  / ___ \| |\  |  \ V / / ___ \|  _ <| |_| |
 |____/  |_| /_/   \_\_| \_|   \_/ /_/   \_\_| \_\____/ 
-Hello! I'm StanVard.
-What can I do for you?
+Hello! I'm StanVard, your friendly task companion.
+What shall we tackle today?
 ____________________________________________________________
 ____________________________________________________________
 OOPS!!! The description of a todo cannot be empty.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Nice! I've added this task:
   [T][ ] read book
-Now you have 1 tasks in the list.
+You're up to 1 tasks now — nicely organized.
 ____________________________________________________________
 ____________________________________________________________
 OOPS!!! I'm sorry, but I don't know what that means :-(
@@ -59,55 +59,55 @@ ____________________________________________________________
 OOPS!!! The deadline date must be in yyyy-MM-dd format.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Nice! I've added this task:
   [D][ ] return book (by: Oct 15 2019)
-Now you have 2 tasks in the list.
+You're up to 2 tasks now — nicely organized.
 ____________________________________________________________
 ____________________________________________________________
 OOPS!!! An event must include /from and /to times.
 ____________________________________________________________
 ____________________________________________________________
-Got it. I've added this task:
+Nice! I've added this task:
   [E][ ] project meeting (from: Mon 2pm to: 4pm)
-Now you have 3 tasks in the list.
+You're up to 3 tasks now — nicely organized.
 ____________________________________________________________
 ____________________________________________________________
 OOPS!!! The task number is out of range.
 ____________________________________________________________
 ____________________________________________________________
-Noted. I've removed this task:
+Poof! I've removed this task:
   [E][ ] project meeting (from: Mon 2pm to: 4pm)
-Now you have 2 tasks in the list.
+You're down to 2 tasks now.
 ____________________________________________________________
 ____________________________________________________________
 OOPS!!! The task number must be a positive integer.
 ____________________________________________________________
 ____________________________________________________________
-Nice! I've marked this task as done:
+All set! I've marked this task as done:
   [D][X] return book (by: Oct 15 2019)
 ____________________________________________________________
 ____________________________________________________________
-OK, I've marked this task as not done yet:
+No problem! I've marked this task as not done yet:
   [T][ ] read book
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here are your tasks:
 1.[T][ ] read book
 2.[D][X] return book (by: Oct 15 2019)
 ____________________________________________________________
 ____________________________________________________________
-Here are the matching tasks in your list:
+Here are the tasks matching your search:
 1.[T][ ] read book
 2.[D][X] return book (by: Oct 15 2019)
 ____________________________________________________________
 ____________________________________________________________
-Here are the matching tasks in your list:
+Here are the tasks matching your search:
 No matching tasks found.
 ____________________________________________________________
 ____________________________________________________________
 OOPS!!! The keyword to find cannot be empty.
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Take care! Bye. Hope to see you again soon!
 ____________________________________________________________
 ```
 
@@ -126,14 +126,14 @@ ____________________________________________________________
 \___ \  | |   / _ \ |  \| | \ \ / / / _ \ | |_) | | | |
  ___) | | |  / ___ \| |\  |  \ V / / ___ \|  _ <| |_| |
 |____/  |_| /_/   \_\_| \_|   \_/ /_/   \_\_| \_\____/ 
-Hello! I'm StanVard.
-What can I do for you?
+Hello! I'm StanVard, your friendly task companion.
+What shall we tackle today?
 ____________________________________________________________
 ____________________________________________________________
-Here are the tasks in your list:
+Here are your tasks:
 1.[T][ ] read book
 2.[D][X] return book (by: Oct 15 2019)
 ____________________________________________________________
-Bye. Hope to see you again soon!
+Take care! Bye. Hope to see you again soon!
 ____________________________________________________________
 ```

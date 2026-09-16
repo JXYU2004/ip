@@ -92,8 +92,8 @@ public class StanVard {
 
         System.out.println(SEPARATOR);
         System.out.print(banner);
-        System.out.println("Hello! I'm StanVard.");
-        System.out.println("What can I do for you?");
+        System.out.println("Hello! I'm StanVard, your friendly task companion.");
+        System.out.println("What shall we tackle today?");
         System.out.println(SEPARATOR);
 
         StanVard stanVard = new StanVard();
@@ -117,7 +117,7 @@ public class StanVard {
             System.out.println(SEPARATOR);
         }
 
-        System.out.println("Bye. Hope to see you again soon!");
+        System.out.println("Take care! Bye. Hope to see you again soon!");
         System.out.println(SEPARATOR);
     }
 
@@ -129,7 +129,7 @@ public class StanVard {
      */
     public synchronized String processCommand(String command) {
         if (command != null && command.trim().equals("bye")) {
-            return "Bye. Hope to see you again soon!";
+            return "Take care! Bye. Hope to see you again soon!";
         }
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -152,9 +152,9 @@ public class StanVard {
      * @param taskCount number of tasks currently stored
      */
     private static void printAddedTask(Task task, int taskCount) {
-        System.out.println("Got it. I've added this task:");
+        System.out.println("Nice! I've added this task:");
         System.out.println("  " + task);
-        System.out.println("Now you have " + taskCount + " tasks in the list.");
+        System.out.println("You're up to " + taskCount + " tasks now — nicely organized.");
     }
 
     /**
@@ -199,7 +199,7 @@ public class StanVard {
                 tasks.get(markIndex).markAsDone();
                 saveTasks(tasks, storage);
 
-                System.out.println("Nice! I've marked this task as done:");
+                System.out.println("All set! I've marked this task as done:");
                 System.out.println("  " + tasks.get(markIndex));
                 break;
 
@@ -212,7 +212,7 @@ public class StanVard {
                 tasks.get(unmarkIndex).markAsNotDone();
                 saveTasks(tasks, storage);
 
-                System.out.println("OK, I've marked this task as not done yet:");
+                System.out.println("No problem! I've marked this task as not done yet:");
                 System.out.println("  " + tasks.get(unmarkIndex));
                 break;
 
@@ -480,9 +480,9 @@ public class StanVard {
      * @param tasks tasks currently stored after deletion
      */
     private static void printDeletedTask(Task task, List<Task> tasks) {
-        System.out.println("Noted. I've removed this task:");
+        System.out.println("Poof! I've removed this task:");
         System.out.println("  " + task);
-        System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+        System.out.println("You're down to " + tasks.size() + " tasks now.");
     }
 
     /**
@@ -491,7 +491,7 @@ public class StanVard {
      * @param tasks tasks currently stored by the chatbot
      */
     private static void printTaskList(List<Task> tasks) {
-        System.out.println("Here are the tasks in your list:");
+        System.out.println("Here are your tasks:");
 
         for (int index = 0; index < tasks.size(); index++) {
             System.out.println((index + 1) + "." + tasks.get(index));
@@ -506,7 +506,7 @@ public class StanVard {
      */
     private static void printMatchingTasks(String keyword, List<Task> tasks) {
         String normalizedKeyword = keyword.toLowerCase(Locale.ROOT);
-        System.out.println("Here are the matching tasks in your list:");
+        System.out.println("Here are the tasks matching your search:");
 
         List<Task> matchingTasks = tasks.stream()
                 .filter(task -> task.getDescription().toLowerCase(Locale.ROOT).contains(normalizedKeyword))
